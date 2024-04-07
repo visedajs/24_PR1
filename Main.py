@@ -335,6 +335,17 @@ class Tree:
         for i, child in enumerate(self.children):
             last = i == len(self.children) - 1
             child[0].print_tree(indent, last, depth + 1)
+            
+    # Koks bez papildu vērtībām pie virsotnēm
+    # def print_tree(self, indent="", last=True, depth=0):
+    #     print(indent, '|__' if last else '|--', self.value, sep='')
+    #     indent += '   ' if last else '|  '
+    #     if not self.children:
+    #         global skibidi_toilet
+    #         skibidi_toilet = depth
+    #     for i, child in enumerate(self.children):
+    #         last = i == len(self.children) - 1
+    #         child[0].print_tree(indent, last, depth + 1)
 
 
 class GraphicalUserInterface(tk.Tk):

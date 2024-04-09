@@ -727,7 +727,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
             if self.chosenDepth == "Full":
 
                 start_time = time.perf_counter_ns()
-                # alphaBeta([0,kokaObjekts], Minimizetajs, alfa, beta)
+                # alphaBeta([0,kokaObjekts], Maksimizētājs, alfa, beta)
                 new_current_number = alphaBeta([0,self.tree], True, -math.inf, math.inf) #izsaucam alfa-beta
                 end_time = time.perf_counter_ns()
                 gameTime = (end_time - start_time)/ 1_000_000
@@ -740,7 +740,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
                 self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
             else:
                 start_time = time.perf_counter_ns()
-                # alphaBeta([0,kokaObjekts], Minimizetajs,pašreizējaisDziļums, izvēlētaisDziļums, alfa, beta)
+                # alphaBeta([0,kokaObjekts], Maksimizētājs ,pašreizējaisDziļums, izvēlētaisDziļums, alfa, beta)
                 new_current_number = alphaBetaWithDepth([0,self.tree], True, current_depth, self.chosenDepth, -math.inf, math.inf)
                 end_time = time.perf_counter_ns()
                 gameTime = (end_time - start_time)/ 1_000_000
@@ -873,7 +873,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
                 else:
                     if self.chosenDepth == "Full":
                         start_time = time.perf_counter_ns()
-                        # alphaBeta([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], Minimizetajs, alfa, beta)
+                        # alphaBeta([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], Maksimizētājs, alfa, beta)
                         new_current_number = alphaBeta([0,Tree(int(self.currentNumber),self.totalPoints,self.bankPoints,0)], True, -math.inf, math.inf)
                         end_time = time.perf_counter_ns()
                         gameTime = (end_time - start_time)/ 1_000_000
@@ -886,7 +886,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
                         self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
                     else:
                         start_time = time.perf_counter_ns()
-                        # alphaBeta([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], Minimizetajs ,pašreizējaisDziļums, izvēlētaisDziļums, alfa, beta)
+                        # alphaBeta([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], Maksimizētājs ,pašreizējaisDziļums, izvēlētaisDziļums, alfa, beta)
                         new_current_number = alphaBetaWithDepth([0,Tree(int(self.currentNumber),self.totalPoints,self.bankPoints,0)], True, current_depth, self.chosenDepth, -math.inf, math.inf)
                         end_time = time.perf_counter_ns()
                         gameTime = (end_time - start_time)/ 1_000_000

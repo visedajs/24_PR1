@@ -321,7 +321,7 @@ def makeMoveDepth(treeStruct, bool, isHumanFirst, maxDepth): # veic gājienu ar 
 # Izmantotie materiāli koka struktūras izveidei:
 # https://stackoverflow.com/questions/2358045/how-can-i-implement-a-tree-in-python
 class Tree:
-    def __init__(self, value, total_points, game_bank, depth):
+    def __init__(self, value, total_points, game_bank, depth): #sanem virsotnes vertibu, speletaju kopejos punktus un speles banku, ka ari pasreizejo dzilumu
         self.value = value # panem value no Tree
         self.total_points = total_points
         self.game_bank = game_bank

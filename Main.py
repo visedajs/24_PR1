@@ -320,11 +320,11 @@ class Tree:
         depth = depth+1
         self.add_child(value, total_points, game_bank, depth) #izsauc funkciju add_child un iedod value, no kura meginas dalit ar 3, 4, 5
 
-    def add_child(self, parent,total_points, game_bank, depth):
+    def add_child(self, parent,total_points, game_bank, depth): # iedod priekšteča parametrus
         for i in range(3,6): # loopo par i padarot 3,4,5
-            if parent % i == 0:
-                child_value = parent//i
-                if child_value % 2 == 0:
+            if parent % i == 0: # pārbauda, vai dalās bez atlikuma ar dalītāju 
+                child_value = parent//i # iegūst pēcteča vērtību int formātā
+                if child_value % 2 == 0: # iedod punktus pēctecim pēc noteikumiem
                     if child_value % 5 == 0:
                         child = Tree(child_value, total_points+1, game_bank+1, depth)
                         self.children.append([child, i, total_points+1, game_bank+1, depth])
@@ -338,6 +338,7 @@ class Tree:
                     else:
                         child = Tree(child_value, total_points-1, game_bank, depth)
                         self.children.append([child, i, total_points-1, game_bank, depth])
+
 
     # calculates and shows the points for the game which determines, if the player who started the game wins or not
     def calcWinningPoints(self, total_points, game_bank):

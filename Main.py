@@ -350,7 +350,9 @@ class Tree:
 
     # Chat GPT jautāts jautājums: Kā var izvadīt koku, lai redzētu, kā viņš izskatās konsolē, kā arī, lai redzētu, kāds ir beigu punktu skaits
     def print_tree(self, indent="", last=True, depth=0):
-        print(indent, '|__' if last else '|--', self.value, "=> ", self.calcWinningPoints(self.total_points, self.game_bank), sep='')
+        print(indent, '|__' if last else '|--', self.value, sep='')
+        # priekš atkļūdošanas :
+        # print(indent, '|__' if last else '|--', self.value, "=> ", self.calcWinningPoints(self.total_points, self.game_bank), sep='')
         indent += '   ' if last else '|  '
         if not self.children:
             global skibidi_toilet

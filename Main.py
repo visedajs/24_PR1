@@ -12,51 +12,63 @@ import time
 # * Jau esošais kodā minimax algoritms
 # (Tiek modērņīzēts minimax algiritms,lai izveidotu alfa-beta)
 # * Chat GPT conversation: https://chat.openai.com/share/6cb39c7c-b5ad-41a7-b127-e770643927da
+
+# Parametru skaidrojums: 
+# node -  koka elements un stavoklis konkrētaja gadījumā
+# maximizingPlayer - Maksimizētajs
+# depth - pašreizējais dziļums
+# maxDepth - spēlei iestādīts dziļumu ierobezojums
+# alpha(-math.inf) un beta(math.inf) parametri 
 def alphaBetaWithDepth(node, maximizingPlayer, depth, maxDepth, alpha, beta):
-    global nodeCounter
+    global nodeCounter # Apstradatie mezgli
     nodeCounter += 1
 
+    # Parbauda vai ir pabeigta spēle
     gameOver = checkIfGameIsOver(node[1])
     
-    # Principa var iztikt ari bez try catch, bet gadijumam ja gameOver varetu atgriezt kadu kļudu varetu atstat
+    # Gadijumam ja gameOver varetu atgriezt kadu kļudu, lai spēle nebeidzas
     try:
         gameOver = checkIfGameIsOver(node[1])
     except Exception as e:
         gameOver = False
         print(f"Error when checking method checkIfGameIsOver: {e}")
-    
+
+    # Jā spēle ir pabeigta atgriež heuristisko funkciju
     if gameOver:
         if depth == maxDepth:
             return returnBottomNodeHeureticValues(node[1])
         else:
             return returnBottomNodeHeureticValues(node[1])
-    
-    if maximizingPlayer:
+
+    # Apstrada mezglu atkarība kads ir spēletajs(maksimizētajs vai minimizētais)
+    if maximizingPlayer: # Ja maksimizetajs
         maxPoints = -math.inf
-        best_node = None
+        best_node = None # Labaka mezgla pagaidam nav
         for i in node[1].children:
+            # rekursivi izsauca pectečus
             points, _ = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
             if points > maxPoints:
                 maxPoints = points
-                best_node = i[0]
-            alpha = max(alpha, points)
+                best_node = i[0] # Atjaunojas vertiba - labakais mezgls
+            alpha = max(alpha, points) # atjaunojas alpha vertība
             if beta <= alpha:
-                break  # Alfa beta nogrieziens
+                break  # Beta nogrieziens
         return maxPoints, best_node
-    else:
+    else: # Ja minimizetajs
         minPoints = math.inf
         best_node = None
         for i in node[1].children:
+            # rekursivi izsauca pectečus
             points, _ = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
             if points < minPoints:
                 minPoints = points
-                best_node = i[0]
-            beta = min(beta, points)
+                best_node = i[0] # Atjaunojas vertiba - labakais mezgls
+            beta = min(beta, points) # atjaunojas beta vertība
             if beta <= alpha:
-                break  # Alfa beta nogrieziens
+                break  # Alfa nogrieziens
         return minPoints, best_node
 
-nodeCounter = 0
+nodeCounter = 0 # mezglu skaitītājs
 
 
 # Avoti:
@@ -67,45 +79,56 @@ nodeCounter = 0
 # * Jau esošais kodā minimax algoritms
 # (Tiek modērņīzēts minimax algiritms,lai izveidotu alfa-beta)
 # * Chat GPT conersation: https://chat.openai.com/share/6cb39c7c-b5ad-41a7-b127-e770643927da
+
+# Parametru skaidrojums: 
+# node -  koka elements un stavoklis konkrētaja gadījumā
+# maximizingPlayer - Maksimizētajs
+# alpha(-math.inf) un beta(math.inf) parametri 
 def alphaBeta(node, maximizingPlayer, alpha, beta):
-    global nodeCounter
-    global elapsed_time
-    global time_list
+    global nodeCounter # Apstradatie mezgli
+    global elapsed_time # Kopejais izpildes laiks
+    global time_list # average izpildes laiks
+    
+    # Gadijumam ja gameOver varetu atgriezt kadu kļudu, lai spēle nebeidzas
     try:
         gameOver = checkIfGameIsOver(node[1])
     except:
         gameOver = False
     nodeCounter += 1
 
+    # Parbauda vai ir pabeigta spēle, ja ir pabeigta tiek atgriezta heuristiska vertiba
     if gameOver:
         return returnBottomNodeHeureticValues(node[1])
-    
-    if maximizingPlayer:
+
+    # Apstrada mezglu atkarība kads ir spēletajs(maksimizētajs vai minimizētais)
+    if maximizingPlayer: # Ja maksimizetajs
         maxPoints = -math.inf
-        best_node = None
+        best_node = None  # Labaka mezgla pagaidam nav
         for i in node[1].children:
+            # rekursivi izsauca pectečus
             points = alphaBeta([node[0],i[0]], not maximizingPlayer, alpha, beta)
             if points[0] > maxPoints:
                 maxPoints = points[0]
-                best_node = i[0]
-            alpha = max(alpha, points[0])
+                best_node = i[0] # Atjaunojas vertiba - labakais mezgls
+            alpha = max(alpha, points[0]) # atjaunojas alpha vertība
             if beta <= alpha:
-                break  # Beta Pruning
+                break  # Beta nogrieziens
         return [maxPoints, best_node]
-    else:
+    else: # Ja minimizetajs
         minPoints = math.inf
         best_node = None
         for i in node[1].children:
+            # rekursivi izsauca pectečus
             points = alphaBeta([node[0],i[0]], not maximizingPlayer, alpha, beta)
             if points[0] < minPoints:
                 minPoints = points[0]
-                best_node = i[0]
-            beta = min(beta, points[0])
+                best_node = i[0] # Atjaunojas vertiba - labakais mezgls
+            beta = min(beta, points[0]) # atjaunojas beta vertība
             if beta <= alpha:
-                break  # Alpha Pruning
+                break  # Alpha nogrieziens
         return [minPoints, best_node]
 
-nodeCounter = 0
+nodeCounter = 0 # mezglu skaitītājs
 
 
 def returnBottomNodeHeureticValues(node):

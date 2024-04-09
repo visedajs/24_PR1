@@ -45,28 +45,28 @@ def alphaBetaWithDepth(node, maximizingPlayer, depth, maxDepth, alpha, beta):
         maxPoints = -math.inf
         best_node = None # Labaka mezgla pagaidam nav
         for i in node[1].children:
-            # rekursivi izsauca pectečus
-            points, _ = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
-            if points > maxPoints:
-                maxPoints = points
+            # rekursivi izsauca pectečus un atgriež to heiristiskos punktus
+            points = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
+            if points[0] > maxPoints:
+                maxPoints = points[0]
                 best_node = i[0] # Atjaunojas vertiba - labakais mezgls
-            alpha = max(alpha, points) # atjaunojas alpha vertība
+            alpha = max(alpha, points[0]) # atjaunojas alpha vertība
             if beta <= alpha:
                 break  # Beta nogrieziens
-        return maxPoints, best_node
+        return [maxPoints, best_node]
     else: # Ja minimizetajs
         minPoints = math.inf
         best_node = None
         for i in node[1].children:
             # rekursivi izsauca pectečus
-            points, _ = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
-            if points < minPoints:
-                minPoints = points
+            points = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
+            if points[0] < minPoints:
+                minPoints = points[0]
                 best_node = i[0] # Atjaunojas vertiba - labakais mezgls
-            beta = min(beta, points) # atjaunojas beta vertība
+            beta = min(beta, points[0]) # atjaunojas beta vertība
             if beta <= alpha:
                 break  # Alfa nogrieziens
-        return minPoints, best_node
+        return [minPoints, best_node]
 
 nodeCounter = 0 # mezglu skaitītājs
 

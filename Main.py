@@ -521,6 +521,7 @@ class SetupScreen(tk.Frame): # Iestatījumu ekrāna klase, šeit tiek iegūtas n
         self.errorLabel.pack(pady=5, padx=5, anchor='center')
 
         # Poga, kas padod parametrus no iestatījumu ekrāna uz skaitļu izvēlni
+        # master.showNumberScreen(izvēlētaisAlgoritms, izvēlētaisDziļums, ) # TODO
         self.buttonConfirm = tk.Button(self, text="Start", font=("Arial", 14), command=lambda: master.showNumberScreen(self.varAlgo.get(), self.getDepthInput(self.varPlayer.get()), int(self.treeInput.get()) if self.varTree.get() == "Depth" else "Full"))
         self.buttonConfirm.pack(pady=10)
         # Uz main menu
@@ -588,10 +589,11 @@ class NumberScreen(tk.Frame): # klase Priekš sākuma skaitļa izvēles
         buttonFrame.columnconfigure(2, weight=1)
         buttonFrame.columnconfigure(3, weight=1)
         buttonFrame.columnconfigure(4, weight=1)
-        # Ar ciklu izveidots pogu teksts un pogas komandas izsaukšana, lai pārietu uz galveno spēles ekrānu (PlayGame)
+        # Ar ciklu izveidots pogu teksts un pogas komandas izsaukšana, lai pārietu uz galveno spēles ekrānu (PlayGame), padodam izveletos parametrus:
         btn_texts = [str(num) for num in self.randNumbers]  
         buttons = []
         for i in range(5):
+            # master.playGame(izvēlētaisĢenerētaisSkaitlis, izvēlētaisAlgoritms, izvēlētaisSpēlētājs, izvēlētaisDziļums, cilvēkaUzvarētieRaundi, datoraUzvarētieRaundi)
             btn = tk.Button(buttonFrame, text=btn_texts[i], font=("Arial", 10), command=lambda idx=i: master.playGame(self.randNumbers[idx], self.chosenAlgo, self.chosenPlayer, self.chosenDepth, self.humanRoundsWon, self.computerRoundsWon))
             buttons.append(btn)
             btn.grid(row=0, column=i, padx=5, pady=5)
@@ -671,6 +673,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
         buttonDividerFrame.columnconfigure(1, weight=1)
         buttonDividerFrame.columnconfigure(2, weight=1)
         # izsaucam, nospiežot pogas, funkciju, kur tiek atjaunināts ekrāns ar jauno informāciju
+        # self.updateGameState(pašreizējieBankasPunkti, pašreizējaisSpēlētājs, pašreizējaisSkaitlisDalītsArDalītāju, kopējiePunkti)
         self.btn1 = tk.Button(buttonDividerFrame, text=":3", state='disabled', font=("Arial", 14), command= lambda: self.updateGameState(self.bankPoints, self.currentPlayer, int(self.currentNumber)//3, self.totalPoints))
         self.btn2 = tk.Button(buttonDividerFrame, text=":4", state='disabled', font=("Arial", 14), command= lambda: self.updateGameState(self.bankPoints, self.currentPlayer, int(self.currentNumber)//4, self.totalPoints))
         self.btn3 = tk.Button(buttonDividerFrame, text=":5", state='disabled', font=("Arial", 14), command= lambda: self.updateGameState(self.bankPoints, self.currentPlayer, int(self.currentNumber)//5, self.totalPoints))

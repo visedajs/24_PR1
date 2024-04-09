@@ -521,7 +521,7 @@ class SetupScreen(tk.Frame): # Iestatījumu ekrāna klase, šeit tiek iegūtas n
         self.errorLabel.pack(pady=5, padx=5, anchor='center')
 
         # Poga, kas padod parametrus no iestatījumu ekrāna uz skaitļu izvēlni
-        # master.showNumberScreen(izvēlētaisAlgoritms, izvēlētaisDziļums, ) # TODO
+        # master.showNumberScreen(izvēlētaisAlgoritms, izvēlētaisSpēlētājs, izvēlētaisDziļums) #shim ari ta japaliek
         self.buttonConfirm = tk.Button(self, text="Start", font=("Arial", 14), command=lambda: master.showNumberScreen(self.varAlgo.get(), self.getDepthInput(self.varPlayer.get()), int(self.treeInput.get()) if self.varTree.get() == "Depth" else "Full"))
         self.buttonConfirm.pack(pady=10)
         # Uz main menu
@@ -706,38 +706,49 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
         global time_list
         if self.chosenAlgo == "MiniMax":
             if self.chosenDepth == "Full":
-                new_current_number = makeMove([0,self.tree], True, False)
+                #makeMove([0,kokaObjekts], True, False) # TODO
+                new_current_number = makeMove([0,self.tree], True, False) # Aprēķinam jauno skaitli
                 print('MiniMax Full izvelejas:', new_current_number)
+                # Atjaunojam datora gajiena labelu UI
                 self.computerMoveDisplay.config(text="Computer chose to divide " +  str(self.currentNumber) + " by " + str(int(self.currentNumber/int(new_current_number))))
+                #Atjaunojam speles stavokli
+                # self.updateGameState(pašreizējieBankasPunkti, pašreizējaisSpēlētājs, jaunaisAprēķinātaisSkaitlis, kopējiePunkti)
                 self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
             else:
+                #makeMove([0,kokaObjekts], True, False) # TODO
                 new_current_number = makeMoveDepth([0,self.tree], True, False, self.chosenDepth)
                 print('MiniMax Depth izvelejas:', new_current_number)
+                # Atjaunojam datora gajiena labelu UI
                 self.computerMoveDisplay.config(text="Computer chose to divide " +  str(self.currentNumber) + " by " + str(int(self.currentNumber/int(new_current_number))))
+                #Atjaunojam speles stavokli
+                # self.updateGameState(pašreizējieBankasPunkti, pašreizējaisSpēlētājs, jaunaisAprēķinātaisSkaitlis, kopējiePunkti)
                 self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
         else:
             if self.chosenDepth == "Full":
 
                 start_time = time.perf_counter_ns()
-                new_current_number = alphaBeta([0,self.tree], True, -math.inf, math.inf)
+                # alphaBeta([0,kokaObjekts], Minimizetajs, alfa, beta)
+                new_current_number = alphaBeta([0,self.tree], True, -math.inf, math.inf) #izsaucam alfa-beta
                 end_time = time.perf_counter_ns()
                 gameTime = (end_time - start_time)/ 1_000_000
                 time_list.append(gameTime)
                 elapsed_time = elapsed_time+gameTime
-
-                new_current_number = new_current_number[1].value
+                
+                new_current_number = new_current_number[1].value # jaunam skaitlim piešķir best_node vērtību no alfa-beta
                 print('Alpha-Beta Full izvelejas:', new_current_number)
                 self.computerMoveDisplay.config(text="Computer chose to divide " +  str(self.currentNumber) + " by " + str(int(self.currentNumber/int(new_current_number))))
                 self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
             else:
                 start_time = time.perf_counter_ns()
+                # alphaBeta([0,kokaObjekts], Minimizetajs,pašreizējaisDziļums, izvēlētaisDziļums, alfa, beta)
                 new_current_number = alphaBetaWithDepth([0,self.tree], True, current_depth, self.chosenDepth, -math.inf, math.inf)
                 end_time = time.perf_counter_ns()
                 gameTime = (end_time - start_time)/ 1_000_000
                 time_list.append(gameTime)
                 elapsed_time = elapsed_time+gameTime
-                new_current_number = new_current_number[1].value
+                new_current_number = new_current_number[1].value # jaunam skaitlim piešķir best_node vērtību no alfa-beta
                 print('Alpha-Beta Depth izvelejas:', new_current_number)
+                # atjaunina labels ui un speles stavokli
                 self.computerMoveDisplay.config(text="Computer chose to divide " +  str(self.currentNumber) + " by " + str(int(self.currentNumber/int(new_current_number))))
                 self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
 
@@ -848,11 +859,13 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
             else:
                 if self.chosenAlgo == "MiniMax":
                     if self.chosenDepth == "Full":
+                        #makeMove([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], True, False) # TODO
                         new_current_number = makeMove([0,Tree(int(self.currentNumber),self.totalPoints,self.bankPoints,0)], True, False)
                         print('MiniMax Full izvelejas:', new_current_number)
                         self.computerMoveDisplay.config(text="Computer chose to divide " +  str(self.currentNumber) + " by " + str(int(self.currentNumber/int(new_current_number))))
                         self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
                     else:
+                        #makeMoveDepth([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], True, False, izvēlētaisDziļums) # TODO
                         new_current_number = makeMoveDepth([0,Tree(int(self.currentNumber),self.totalPoints,self.bankPoints,0)], True, False, self.chosenDepth)
                         print('MiniMax Depth izvelejas:', new_current_number)
                         self.computerMoveDisplay.config(text="Computer chose to divide " +  str(self.currentNumber) + " by " + str(int(self.currentNumber/int(new_current_number))))
@@ -860,6 +873,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
                 else:
                     if self.chosenDepth == "Full":
                         start_time = time.perf_counter_ns()
+                        # alphaBeta([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], Minimizetajs, alfa, beta)
                         new_current_number = alphaBeta([0,Tree(int(self.currentNumber),self.totalPoints,self.bankPoints,0)], True, -math.inf, math.inf)
                         end_time = time.perf_counter_ns()
                         gameTime = (end_time - start_time)/ 1_000_000
@@ -872,6 +886,7 @@ class PlayGame(tk.Frame): # Galvenā spēlēšanas ekrāna klase.
                         self.updateGameState(self.bankPoints, self.currentPlayer, new_current_number, self.totalPoints)
                     else:
                         start_time = time.perf_counter_ns()
+                        # alphaBeta([0,kokaObjekts(int(pašreizējaisSkaitlis), kopējiePunkti, bankasPunkti,0)], Minimizetajs ,pašreizējaisDziļums, izvēlētaisDziļums, alfa, beta)
                         new_current_number = alphaBetaWithDepth([0,Tree(int(self.currentNumber),self.totalPoints,self.bankPoints,0)], True, current_depth, self.chosenDepth, -math.inf, math.inf)
                         end_time = time.perf_counter_ns()
                         gameTime = (end_time - start_time)/ 1_000_000

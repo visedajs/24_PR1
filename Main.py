@@ -58,7 +58,7 @@ def alphaBetaWithDepth(node, maximizingPlayer, depth, maxDepth, alpha, beta):
         minPoints = math.inf
         best_node = None
         for i in node[1].children:
-            # rekursivi izsauca pectečus
+            # rekursivi izsauca pectečus un atgriež to heiristiskos punktus
             points = alphaBetaWithDepth([node[0], i[0]], not maximizingPlayer, depth+1, maxDepth, alpha, beta)
             if points[0] < minPoints:
                 minPoints = points[0]
@@ -148,35 +148,36 @@ def checkIfGameIsOver(node):
         return True
     
     
-def minimaxWithDepth(node, maximizingPlayer, depth, maxDepth):
-    global nodeCounter
+def minimaxWithDepth(node, maximizingPlayer, depth, maxDepth): # iedod parametrus (pašreizējāVirsotne, vaiDatorsIrMaksimizētājs, tagadējaisDziļums, izvēlētaisDziļums)
+    global nodeCounter # Apmeklēto virsotņu uzskaite
     try:
-        gameOver = checkIfGameIsOver(node[1])
+        gameOver = checkIfGameIsOver(node[1]) # pārbauda, vai ir spēle beigusies, iedodot funckijai checkIfGameIsOver
+        # apskatāmās virsotnes objektu
     except:
-        gameOver = False
+        gameOver = False # ja izmet kļūdu, tad ir sasniegtas koka beigas
     nodeCounter = nodeCounter+1
     
 
-    if gameOver or depth == maxDepth:
-        return returnBottomNodeHeureticValues(node[1])
+    if gameOver or depth == maxDepth: # ja beidzies koks vai sasniegts dziļuma ierobežojums
+        return returnBottomNodeHeureticValues(node[1]) # atgriež strupceļa virsotnes heiristisko vērtību
     
-    if maximizingPlayer:
-        maxPoints = -math.inf
-        for i in node[1].children:
-            points = minimaxWithDepth([node[0],i[0]], not maximizingPlayer, depth+1, maxDepth)
+    if maximizingPlayer: # ja dators ir pirmais
+        maxPoints = -math.inf 
+        for i in node[1].children: # iet cauri virsotnes katram bērnam, kur i ir katrs bērns
+            points = minimaxWithDepth([node[0],i[0]], not maximizingPlayer, depth+1, maxDepth) # rekursivi izsauca pectečus un atgriež to heiristiskos punktus
             if points[0] > maxPoints:
                 maxPoints = points[0]
                 best_node = i[0]
 
-        return [maxPoints, best_node]
+        return [maxPoints, best_node] # atgriež labāko heiristiku un labāko virsotni
     else:
         minPoints = math.inf
-        for i in node[1].children:
-            points = minimaxWithDepth([node[0],i[0]], not maximizingPlayer, depth+1, maxDepth)
+        for i in node[1].children: # iet cauri virsotnes katram bērnam, kur i ir katrs bērns
+            points = minimaxWithDepth([node[0],i[0]], not maximizingPlayer, depth+1, maxDepth) # rekursivi izsauca pectečus un atgriež to heiristiskos punktus
             if points[0] < minPoints:
                 minPoints = points[0]
                 best_node = i[0]
-        return [minPoints, best_node]
+        return [minPoints, best_node] # atgriež labāko heiristiku un labāko virsotni
 
 nodeCounter = 0
 # Izmantotie materiāli MiniMax algoritma izveidei:
@@ -184,125 +185,133 @@ nodeCounter = 0
 # https://www.youtube.com/watch?v=3nzupVMpZeA
 # https://www.youtube.com/watch?v=Bk9hlNZc6sE
 # https://www.youtube.com/watch?v=KU9Ch59-4vw
-def minimax(node, maximizingPlayer):
-    global nodeCounter
+def minimax(node, maximizingPlayer): # iedod parametrus (pašreizējāVirsotne, vaiDatorsIrMaksimizētājs)
+    global nodeCounter # Apmeklēto virsotņu uzskaite
     
 
     try:
-        gameOver = checkIfGameIsOver(node[1])
+        gameOver = checkIfGameIsOver(node[1]) # pārbauda, vai ir spēle beigusies, iedodot funckijai checkIfGameIsOver
+         # apskatāmās virsotnes objektu
     except:
-        gameOver = False
+        gameOver = False # ja izmet kļūdu, tad ir sasniegtas koka beigas
     nodeCounter = nodeCounter+1
-    if gameOver:
-        return returnBottomNodeHeureticValues(node[1])
     
-    if maximizingPlayer:
+    if gameOver: # ja beidzies koks
+        return returnBottomNodeHeureticValues(node[1]) # atgriež strupceļa virsotnes heiristisko vērtību
+    
+    if maximizingPlayer: # ja dators ir pirmais
         maxPoints = -math.inf
-        for i in node[1].children:
-            points = minimax([node[0],i[0]], not maximizingPlayer)
+        for i in node[1].children: # iet cauri virsotnes katram bērnam, kur i ir katrs bērns
+            points = minimax([node[0],i[0]], not maximizingPlayer) # rekursivi izsauca pectečus un atgriež to heiristiskos punktus
             if points[0] > maxPoints:
                 maxPoints = points[0]
                 best_node = i[0]
 
-        return [maxPoints, best_node]
-    else:
+        return [maxPoints, best_node] # atgriež labāko heiristiku un labāko virsotni
+    else: # ja dators ir otrais
         minPoints = math.inf
-        for i in node[1].children:
-            points = minimax([node[0],i[0]], not maximizingPlayer)
+        for i in node[1].children: # iet cauri virsotnes katram bērnam, kur i ir katrs bērns
+            points = minimax([node[0],i[0]], not maximizingPlayer) # rekursivi izsauca pectečus un atgriež to heiristiskos punktus
             if points[0] < minPoints:
                 minPoints = points[0]
                 best_node = i[0]
-        return [minPoints, best_node]
+        return [minPoints, best_node] # atgriež labāko heiristiku un labāko virsotni
 
 i = 0
-def determineWinner(points, isHumanFirst):
-    if isHumanFirst:
-        if points == 1:
-            print('Human')
-            return "Human"
-        else:
-            print('Computer')
-            return "Computer"
-    else:
-        if points == 1:
-            print('Computer')
-            return "Computer"
-        else:
-            print('Human')
-            return "Human"
+# def determineWinner(points, isHumanFirst):
+#     if isHumanFirst:
+#         if points == 1:
+#             print('Human')
+#             return "Human"
+#         else:
+#             print('Computer')
+#             return "Computer"
+#     else:
+#         if points == 1:
+#             print('Computer')
+#             return "Computer"
+#         else:
+#             print('Human')
+#             return "Human"
 
 
 answer = ""
 maxI = 0
 elapsed_time = 0
 time_list = []
-def makeMove(treeStruct, bool, isHumanFirst):
-    global answer
-    global i
+def makeMove(treeStruct, bool, isHumanFirst): # veic gājienu (kokaObjekts, vaiDatoraGajiens, vaiCilvēksIrPirmais)
+    global answer # šeit tiks glabāta labākā virsotnes vērtība
+    
+    global i 
     global maxI
+    
     global elapsed_time
     global time_list
     i = i+1
     maxI = maxI+1
-    if bool: # if the player wants to get a negative number
+    if bool: # if the player wants to get a negative number (ja pirmais iet dators)
         # print(treeStruct[0])
         if isHumanFirst:
             start_time = time.perf_counter_ns()
-            node = minimax(treeStruct, not bool)
+            node = minimax(treeStruct, not bool) # izsauc minimax, iedodot koku un vaiCilveksIrPirmais
             end_time = time.perf_counter_ns()
             gameTime = (end_time - start_time)/ 1_000_000
             time_list.append(gameTime)
             # print(gameTime)
             elapsed_time = elapsed_time+gameTime
-            answer = str(node[1].value)
-        else:
+            answer = str(node[1].value) # atgriež labāko virsotnes vērtību
+        else: # ja pirmais iet cilveks
             start_time = time.perf_counter_ns()
             # time.sleep(0.1)
-            node = minimax(treeStruct, bool)
+            node = minimax(treeStruct, bool) # izsauc minimax, iedodot koku un vaiDatorsIrPirmais
             end_time = time.perf_counter_ns()
             gameTime = (end_time - start_time)/ 1_000_000
             time_list.append(gameTime)
             # print(gameTime)
             elapsed_time = elapsed_time+gameTime
-            answer = str(node[1].value)
+            answer = str(node[1].value)  # atgriež labāko virsotnes vērtību
 
         # print("Computer chose:" + str(node[1].value))
-        if node[1].value % 3 == 0 or node[1].value % 4 == 0 or node[1].value % 5 == 0:
+        # priekš atkļūdošanas Terminālī
+        if node[1].value % 3 == 0 or node[1].value % 4 == 0 or node[1].value % 5 == 0: 
             makeMove([node[0],node[1]], not bool, isHumanFirst)
         
 
     return answer
 
-def makeMoveDepth(treeStruct, bool, isHumanFirst, maxDepth):
-    global answer
+def makeMoveDepth(treeStruct, bool, isHumanFirst, maxDepth): # veic gājienu ar doto dziļumu (kokaObjekts, vaiDatoraGajiens, vaiCilvēksIrPirmais, izvēlētaisDziļums jeb chosenDepth)
+    global answer # šeit tiks glabāta labākā virsotnes vērtība
+    
     global i
     global maxI
+    
     global elapsed_time
     global time_list
     i = i+1
     maxI = maxI+1
     depth = 0
-    if bool: # if the player wants to get a negative number
-        print(treeStruct[0])
+    if bool: # if the player wants to get a negative number (ja pirmais iet dators)
+        # print(treeStruct[0])
         if isHumanFirst:
-            node = minimaxWithDepth(treeStruct, not bool, depth, maxDepth)
+            node = minimaxWithDepth(treeStruct, not bool, depth, maxDepth) # izsauc minimax, iedodot koku un vaiCilveksIrPirmais, un iedod izvēlētaisDziļums
             end_time = time.perf_counter_ns()
             gameTime = (end_time - start_time)/ 1_000_000
             time_list.append(gameTime)
             # print(gameTime)
             elapsed_time = elapsed_time+gameTime
-            answer = str(node[1].value)
+            answer = str(node[1].value) # atgriež labāko virsotnes vērtību
         else:
             start_time = time.perf_counter_ns()
-            node = minimaxWithDepth(treeStruct, bool, depth, maxDepth)
+            node = minimaxWithDepth(treeStruct, bool, depth, maxDepth) # izsauc minimax, iedodot koku un vaiDatorsIrPirmais, un iedod izvēlētaisDziļums
             end_time = time.perf_counter_ns()
             gameTime = (end_time - start_time)/ 1_000_000
             time_list.append(gameTime)
             # print(gameTime)
             elapsed_time = elapsed_time+gameTime
-            answer = str(node[1].value)
+            answer = str(node[1].value) # atgriež labāko virsotnes vērtību
         # print("Computer chose:" + str(node[1].value))
         maxDepth = maxDepth+2
+        # priekš atkļūdošanas Terminālī
         if node[1].value % 3 == 0 or node[1].value % 4 == 0 or node[1].value % 5 == 0:
             makeMoveDepth([node[0],node[1]], not bool, isHumanFirst, maxDepth)
    
